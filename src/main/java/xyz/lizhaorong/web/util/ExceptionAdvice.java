@@ -92,8 +92,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public Response handleHttpMediaTypeNotSupportedException(Exception e) {
         logger.error("不支持当前媒体类型", e);
-        System.out.println("不支持当前媒体类型");
-        System.out.println(e);
         return Response.failure("content_type_not_supported");
     }
 

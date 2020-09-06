@@ -30,4 +30,9 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <mvc:interceptors>
+        <!--    token验证    -->
+        <bean class="xyz.lizhaorong.web.util.authorization.AuthorizationInterceptor"/>
+    </mvc:interceptors>
+
 </beans>
