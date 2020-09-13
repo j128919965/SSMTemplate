@@ -1,9 +1,11 @@
-package xyz.lizhaorong.web.util.authorization;
+package xyz.lizhaorong.security.authorization;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import xyz.lizhaorong.web.util.authorization.token.TokenManager;
+import xyz.lizhaorong.security.authorization.token.TokenManager;
+import xyz.lizhaorong.web.util.Response;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     @Autowired
     private TokenManager manager;
 
+    ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -23,14 +26,19 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        //如果注明了@authorization，需要进行验证,进行验证返回401错误
-        if (method.getAnnotation(Authorization.class) != null) {
+        //如果方法或类注明了@authorization
+        if (method.getClass().getAnnotation(Authorization.class)!=null|| method.getAnnotation(Authorization.class) != null) {
             //从header中得到token
             String authorization = request.getHeader("Authorization");
             System.out.println("\n\n进行身份验证");
             System.out.println("token: "+authorization+"\n\n");
             //验证token
-            return manager.checkToken(authorization);
+            boolean flag = manager.checkToken(authorization);
+            if(flag) return true;
+
+            response.getWriter().write(mapper.writeValueAsString(Response.failure("登录状态失效")));
+            return false;
+
         }
         return true;
     }

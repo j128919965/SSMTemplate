@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.lizhaorong.service.SBService;
 import xyz.lizhaorong.web.util.Response;
-import xyz.lizhaorong.web.util.authorization.Authorization;
+import xyz.lizhaorong.security.authorization.Authorization;
 
 @RequestMapping("/home")
 @Controller

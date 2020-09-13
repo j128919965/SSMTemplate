@@ -1,4 +1,4 @@
-package xyz.lizhaorong.web.util.authorization;
+package xyz.lizhaorong.security.authorization;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
