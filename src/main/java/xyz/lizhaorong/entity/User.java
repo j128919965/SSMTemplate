@@ -1,10 +1,13 @@
 package xyz.lizhaorong.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
 
     private int id;
+    @NotBlank(message = "姓名不能为空")
     private String name;
     private boolean gender;
 

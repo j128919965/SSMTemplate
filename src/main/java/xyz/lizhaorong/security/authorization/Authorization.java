@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 在controller方法上添加此注解，代表需要身份验证
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorization {
 

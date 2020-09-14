@@ -26,12 +26,11 @@ public class ExceptionAdvice {
 
     /**
      * 400 - Bad Request
-     * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        logger.error("参数解析失败", e);
+        logger.error("参数解析失败");
         return Response.failure("could_not_read_json");
     }
 
@@ -41,7 +40,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public Response handleValidationException(ValidationException e) {
-        logger.error("参数验证失败", e);
+        logger.error("参数验证失败");
         return Response.failure("validation_exception");
     }
 
@@ -65,7 +64,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     public Response handleBindException(BindException e) {
-        logger.error("参数验证失败", e);
+        logger.error("参数验证失败");
         System.out.println(e.getMessage());
         List<FieldError> errors = e.getFieldErrors();
         StringBuilder sb = new StringBuilder();

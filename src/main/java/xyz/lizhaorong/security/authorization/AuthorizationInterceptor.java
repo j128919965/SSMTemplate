@@ -27,7 +27,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         //如果方法或类注明了@authorization
-        if (method.getClass().getAnnotation(Authorization.class)!=null|| method.getAnnotation(Authorization.class) != null) {
+        if (method.getDeclaringClass().getAnnotation(Authorization.class)!=null|| method.getAnnotation(Authorization.class) != null) {
             //从header中得到token
             String authorization = request.getHeader("Authorization");
             System.out.println("\n\n进行身份验证");
