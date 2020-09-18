@@ -1,4 +1,4 @@
-package xyz.lizhaorong.security.authorization;
+package xyz.lizhaorong.security.webUtil;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorization {
-
+    /**
+     * value，即为权限值，用户的权限需要大于等于该权限值才予以放行
+     * @return
+     */
+    public int value() default 1;
 }

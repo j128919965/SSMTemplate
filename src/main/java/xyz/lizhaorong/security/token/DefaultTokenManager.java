@@ -1,4 +1,4 @@
-package xyz.lizhaorong.security.authorization.token;
+package xyz.lizhaorong.security.token;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component("manager")
+@Component("tokenManager")
 public class DefaultTokenManager implements TokenManager {
 
     /**
@@ -27,7 +27,7 @@ public class DefaultTokenManager implements TokenManager {
 
 
     @Override
-    public String addToken(String uid) {
+    public String generate(String uid,int role) {
 
         try{
             Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
@@ -39,6 +39,7 @@ public class DefaultTokenManager implements TokenManager {
             return JWT.create()
                     .withHeader(header)
                     .withClaim("uid",uid)
+                    .withClaim("role",role)
                     .withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
@@ -49,27 +50,18 @@ public class DefaultTokenManager implements TokenManager {
     }
 
     @Override
-    public boolean checkToken(String token) {
+    public SimpleUser checkToken(String token) {
         try{
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
-            return true;
+            return new SimpleUser(decodedJWT.getClaim("uid").asString(),decodedJWT.getClaim("role").asInt());
         }catch (TokenExpiredException e){
             System.out.println("token过期");
-        }catch (Exception e){
+        }catch (JWTDecodeException e){
+            System.out.println("token解析失败");
+        } catch (Exception e){
             e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public String getUserID(String token) {
-        try {
-            DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("uid").asString();
-        } catch (JWTDecodeException e) {
-            e.getStackTrace();
         }
         return null;
     }

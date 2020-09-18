@@ -9,9 +9,17 @@
 <html>
 <head>
     <title>Title</title>
+    <style>
+        .home{
+
+        }
+    </style>
 </head>
 <body>
 index<br/>
 <a href="home/1">home1</a>
+<div class="home">
+
+</div>
 </body>
 </html>

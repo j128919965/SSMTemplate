@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import xyz.lizhaorong.entity.User;
 import xyz.lizhaorong.service.SBService;
 import xyz.lizhaorong.web.util.Response;
-import xyz.lizhaorong.security.authorization.Authorization;
+import xyz.lizhaorong.security.webUtil.Authorization;
 
 import javax.validation.Valid;
 
 @RequestMapping("/home")
 @Controller
-@Authorization
+@Authorization(3)
 public class HomeController {
 
     @Autowired

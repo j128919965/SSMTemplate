@@ -32,7 +32,7 @@
 
     <mvc:interceptors>
         <!--    token验证    -->
-        <bean class="xyz.lizhaorong.security.authorization.AuthorizationInterceptor"/>
+        <bean class="xyz.lizhaorong.security.webUtil.AuthorizationInterceptor"/>
     </mvc:interceptors>
 
 </beans>
