@@ -3,3 +3,5 @@ local.properties
 /.settings/
 .project
 .classpath
+BaseSSMProj.iml
+/.idea/
