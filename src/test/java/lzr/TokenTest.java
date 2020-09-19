@@ -23,7 +23,7 @@ public class TokenTest {
     @Test
     public void t2(){
         TokenManager manager = new DefaultTokenManager();
-        System.out.println(manager.generate("201721221294",2));
+        System.out.println(manager.generate("201721221294",4));
     }
 
     @Test

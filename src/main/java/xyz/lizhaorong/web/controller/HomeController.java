@@ -26,8 +26,8 @@ public class HomeController {
 
     @GetMapping("/sb")
     @ResponseBody
-    public Response getsb(){
-        return Response.success(service.geUserById(1));
+    public Response getsb(int id){
+        return Response.success(service.geUserById(id));
     }
 
     @PostMapping("/psb")
