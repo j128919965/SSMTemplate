@@ -7,9 +7,12 @@ import xyz.lizhaorong.web.util.Response;
 import xyz.lizhaorong.web.util.http.HttpUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Httptest {
+
+    String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyMDE3MjEyMjEyOTQiLCJyb2xlIjo0LCJleHAiOjE2MDA3NDczNjZ9.pYBvV1_tMrjvGUvrNeRnQeLB0b1iEubKZDJz_HyDwUE";
 
     @Test
     public void t1() throws IOException {
@@ -23,15 +26,28 @@ public class Httptest {
 
     @Test
     public void t2() throws Exception {
-        HttpUtil<User, Response> httpUtil = new HttpUtil<>();
+        HttpUtil httpUtil = new HttpUtil();
         User u = new User();
         u.setName("lzr");
         u.setGender(false);
         u.setId(9);
-        httpUtil.setHeader("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyMDE3MjEyMjEyOTQiLCJyb2xlIjo0LCJleHAiOjE2MDA3NDE0MjR9.Kt5nWrfrCHhygeRsuYbE9Gc9VF5jGYkK8YNl4KRocoY");
-        Response response = httpUtil.post("http://localhost:8080/home/psb2", u, Response.class);
+        Response response = httpUtil
+                .setHeader("Authorization",token)
+                .post("http://localhost:8080/home/psb2", u, Response.class);
+
         System.out.println(response);
 
+    }
+
+    @Test
+    public void t3() throws IOException {
+        String url = "http://localhost:8080/home/sb";
+        HttpUtil httpUtil = new HttpUtil();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id","1");
+        Response user = httpUtil.setHeader("Authorization",token)
+                .get(url, map, Response.class);
+        System.out.println(user);
     }
 
 }

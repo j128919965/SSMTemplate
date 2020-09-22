@@ -26,6 +26,7 @@
 
 配置jedis，编写redisCache，可以使用redis作为mybatis缓存
 
-* v 0.5.0
+* v 0.5.1
 
-基于apache httpClient的发送请求框架，可以很方便的发送post请求
+基于apache httpClient的发送请求框架，可以很方便的发送post和get请求。
+对前面的功能进行了一些优化

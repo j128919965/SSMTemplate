@@ -36,16 +36,22 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             String authorization = request.getHeader("Authorization");
             System.out.println("\n\n进行身份验证");
             System.out.println("token: "+authorization+"\n\n");
-            //验证token
-            SimpleUser user = tokenManager.checkToken(authorization);
-            //验证身份等级是否拥有权限
-            if(user!=null) {
-                if (user.getRole()>ano.value())
-                    return true;
-                message = "您的账号权限不足";
-            }else{
-                message = "登录信息无效";
+            if(authorization!=null){
+                //验证token
+                SimpleUser user = tokenManager.checkToken(authorization);
+                //验证身份等级是否拥有权限
+                if(user!=null) {
+                    if (user.getRole()>ano.value())
+                        return true;
+                    message = "您的账号权限不足";
+                }else{
+                    message = "登录信息无效";
+                }
+            } else {
+                message = "没有检测到登录信息";
             }
+
+            response.setStatus(401);
             response.getWriter().write(mapper.writeValueAsString(Response.failure(message)));
             return false;
         }

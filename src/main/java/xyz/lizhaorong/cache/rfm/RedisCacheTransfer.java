@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisCacheTransfer {
     @Autowired
     public void setRedisTemplate(RedisTemplate redisTemplate) {
-        RedisCache.setRedisTemplate(redisTemplate);
+        RedisCache4Mybatis.setRedisTemplate(redisTemplate);
     }
 
 

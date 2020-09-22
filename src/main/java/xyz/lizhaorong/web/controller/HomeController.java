@@ -12,7 +12,7 @@ import javax.validation.Valid;
 
 @RequestMapping("/home")
 @Controller
-@Authorization(3)
+@Authorization(1)
 public class HomeController {
 
     @Autowired
