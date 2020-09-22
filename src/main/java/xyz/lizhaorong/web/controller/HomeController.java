@@ -37,4 +37,11 @@ public class HomeController {
         return Response.success();
     }
 
+    @PostMapping("/psb2")
+    @ResponseBody
+    public Response postUserBody(@RequestBody User user){
+        System.out.println(user);
+        return Response.success();
+    }
+
 }

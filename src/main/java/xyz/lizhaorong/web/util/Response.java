@@ -50,6 +50,12 @@ public class Response {
         return data;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Response{" +
+                "success=" + success +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

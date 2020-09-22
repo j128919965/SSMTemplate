@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -88,28 +89,19 @@ public class RedisCache implements Cache {
 
     @Override
     public void clear() {
-        Long size=redisTemplate.execute(new RedisCallback<Long>() {
-            @Override
-            public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                Long size = redisConnection.dbSize();
-                //连接清除数据
-                redisConnection.flushDb();
-                redisConnection.flushAll();
-                return size;
-            }
+        Long size=redisTemplate.execute((RedisCallback<Long>) redisConnection -> {
+            Long size1 = redisConnection.dbSize();
+            //连接清除数据
+            redisConnection.flushDb();
+            redisConnection.flushAll();
+            return size1;
         });
         logger.info(">>>>>>>>>>>>>>>>>>>>>>>>clear: 清除了" + size + "个对象");
     }
 
     @Override
     public int getSize() {
-        Long size = redisTemplate.execute(new RedisCallback<Long>() {
-            @Override
-            public Long doInRedis(RedisConnection connection)
-                    throws DataAccessException {
-                return connection.dbSize();
-            }
-        });
+        Long size = redisTemplate.execute((RedisCallback<Long>) RedisServerCommands::dbSize);
         return size.intValue();
     }
 

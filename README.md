@@ -25,3 +25,7 @@
 2020.9.19
 
 配置jedis，编写redisCache，可以使用redis作为mybatis缓存
+
+* v 0.5.0
+
+基于apache httpClient的发送请求框架，可以很方便的发送post请求
