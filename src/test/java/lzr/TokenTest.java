@@ -17,7 +17,7 @@ public class TokenTest {
     @Test
     public void t2(){
         TokenManager manager = new DefaultTokenManager();
-        System.out.println(manager.generate("201721221294",4));
+        System.out.println(manager.generate("201721221294",4,"39.99.152.64"));
     }
 
     @Test

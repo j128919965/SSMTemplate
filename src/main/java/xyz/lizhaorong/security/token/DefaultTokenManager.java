@@ -27,7 +27,7 @@ public class DefaultTokenManager implements TokenManager {
 
 
     @Override
-    public String generate(String uid,int role) {
+    public String generate(String uid,int role,String addr) {
 
         try{
             Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
@@ -40,6 +40,7 @@ public class DefaultTokenManager implements TokenManager {
                     .withHeader(header)
                     .withClaim("uid",uid)
                     .withClaim("role",role)
+                    .withClaim("addr",addr)
                     .withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
@@ -55,7 +56,7 @@ public class DefaultTokenManager implements TokenManager {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
-            return new SimpleUser(decodedJWT.getClaim("uid").asString(),decodedJWT.getClaim("role").asInt());
+            return new SimpleUser(decodedJWT.getClaim("uid").asString(),decodedJWT.getClaim("role").asInt(),decodedJWT.getClaim("addr").asString());
         }catch (TokenExpiredException e){
             System.out.println("token过期");
         }catch (JWTDecodeException e){

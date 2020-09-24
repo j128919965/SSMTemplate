@@ -10,11 +10,21 @@ package xyz.lizhaorong.security.token;
 public class SimpleUser {
 
     private String userId;
+    private String addr;
     private int role;
 
-    public SimpleUser(String userId, int role) {
+    public SimpleUser(String userId, int role, String addr) {
         this.userId = userId;
+        this.addr = addr;
         this.role = role;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
     }
 
     public String getUserId() {
@@ -37,6 +47,7 @@ public class SimpleUser {
     public String toString() {
         return "SimpleUser{" +
                 "userId='" + userId + '\'' +
+                ", addr='" + addr + '\'' +
                 ", role=" + role +
                 '}';
     }
