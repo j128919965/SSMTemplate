@@ -27,13 +27,6 @@ public interface TokenManager {
     List<String> refreshToken(String tk);
 
     /**
-     * 解析token
-     * @param token 客户端发来的token字符串
-     * @return 解析结果
-     */
-    SimpleUser analysisToken(String token);
-
-    /**
      * 检查token是否符合要求
      * @return 结果
      */

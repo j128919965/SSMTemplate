@@ -55,11 +55,8 @@ public class DefaultTokenManager implements TokenManager {
 
         //获取token解析结果
         SimpleUser user;
-        if(flag){
-            user = analysisToken(authorization);
-        } else {
-           user = analysisRefreshToken(authorization);
-        }
+        user = analysisToken(authorization,flag);
+
         if(user==null) return Response.failure(TokenErrorCode.WRONG_TOKEN);
 
         //令牌需要刷新
@@ -131,7 +128,7 @@ public class DefaultTokenManager implements TokenManager {
     }
 
 
-    private SimpleUser analysisTokenImpl(String token,boolean flag){
+    private SimpleUser analysisToken(String token,boolean flag){
         try{
 
             Algorithm algorithm ;
@@ -157,16 +154,6 @@ public class DefaultTokenManager implements TokenManager {
         }
         return null;
     }
-
-    @Override
-    public SimpleUser analysisToken(String token) {
-        return analysisTokenImpl(token,true);
-    }
-
-    private SimpleUser analysisRefreshToken(String token){
-        return analysisTokenImpl(token,false);
-    }
-
     @Override
     public List<String> refreshToken(String tk) {
         //TODO
