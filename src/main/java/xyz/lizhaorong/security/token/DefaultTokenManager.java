@@ -15,10 +15,19 @@ import java.util.Map;
 @Component("tokenManager")
 public class DefaultTokenManager implements TokenManager {
 
+    public static final int MAX_COUNT = 5;
+
     /**
-     * 过期时间
+     * accessToken 过期时间 60min
      */
     private static final long EXPIRE_TIME=60 * 60 *1000;
+
+    /**
+     * refreshToken 过期时间 90min
+     */
+    private static final long REFRESH_EXPIRE_TIME=90 * 60 *1000;
+
+
 
     /**
      * 私钥，使用它生成token，最好进行下加密
@@ -27,7 +36,7 @@ public class DefaultTokenManager implements TokenManager {
 
 
     @Override
-    public String generate(String uid,int role,String addr) {
+    public String generateAccessToken(SimpleUser user) {
 
         try{
             Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
@@ -38,27 +47,32 @@ public class DefaultTokenManager implements TokenManager {
 
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("uid",uid)
-                    .withClaim("role",role)
-                    .withClaim("addr",addr)
+                    .withClaim("uid",user.getUserId())
+                    .withClaim("role",user.getRole())
+                    .withClaim("addr",user.getAddr())
+                    .withClaim("count",user.getCount())
                     .withExpiresAt(date)
                     .sign(algorithm);
         }catch (Exception e){
             e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
-    public SimpleUser checkToken(String token) {
+    public SimpleUser analysisToken(String token) {
         try{
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
-            return new SimpleUser(decodedJWT.getClaim("uid").asString(),decodedJWT.getClaim("role").asInt(),decodedJWT.getClaim("addr").asString());
+            return new SimpleUser(
+                    decodedJWT.getClaim("uid").asString()
+                    ,decodedJWT.getClaim("role").asInt()
+                    , decodedJWT.getClaim("addr").asString()
+                    ,decodedJWT.getClaim("count").asInt()
+            );
         }catch (TokenExpiredException e){
-            System.out.println("token过期");
+            return new SimpleUser(null,0,null,-1);
         }catch (JWTDecodeException e){
             System.out.println("token解析失败");
         } catch (Exception e){

@@ -12,19 +12,23 @@ public class SimpleUser {
     private String userId;
     private String addr;
     private int role;
+    private int count;
 
-    public SimpleUser(String userId, int role, String addr) {
+    public SimpleUser(String userId, int role, String addr, int count) {
         this.userId = userId;
         this.addr = addr;
         this.role = role;
+        this.count = count;
     }
 
-    public String getAddr() {
-        return addr;
-    }
-
-    public void setAddr(String addr) {
-        this.addr = addr;
+    @Override
+    public String toString() {
+        return "SimpleUser{" +
+                "userId='" + userId + '\'' +
+                ", addr='" + addr + '\'' +
+                ", role=" + role +
+                ", count=" + count +
+                '}';
     }
 
     public String getUserId() {
@@ -35,6 +39,14 @@ public class SimpleUser {
         this.userId = userId;
     }
 
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
     public int getRole() {
         return role;
     }
@@ -43,12 +55,11 @@ public class SimpleUser {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "SimpleUser{" +
-                "userId='" + userId + '\'' +
-                ", addr='" + addr + '\'' +
-                ", role=" + role +
-                '}';
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

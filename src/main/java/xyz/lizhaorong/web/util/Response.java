@@ -24,16 +24,32 @@ public class Response {
         return response;
     }
 
-    public Response failure(){
+    public static Response failure(){
         Response response = new Response();
         response.message=ERROR;
         response.success=false;
         return response;
     }
 
+    public static Response failure(String message,Object data){
+        Response response = new Response();
+        response.message=message;
+        response.success=false;
+        response.data = data;
+        return response;
+    }
+
     public static Response failure(String message){
         Response response = new Response();
         response.message=message;
+        response.success=false;
+        return response;
+    }
+
+    public static Response failure(ErrorCode errorCode){
+        Response response = new Response();
+        response.message=errorCode.message();
+        response.data=errorCode.code();
         response.success=false;
         return response;
     }

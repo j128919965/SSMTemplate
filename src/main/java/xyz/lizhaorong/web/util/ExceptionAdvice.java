@@ -101,7 +101,6 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public Response handleException(Exception e) {
         logger.error("服务运行异常", e);
-        System.out.println(e);
         return Response.failure(e.getMessage());
     }
 }
