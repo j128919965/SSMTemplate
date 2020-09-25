@@ -7,10 +7,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Component;
+import xyz.lizhaorong.security.webUtil.TokenErrorCode;
+import xyz.lizhaorong.web.util.Response;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component("tokenManager")
 public class DefaultTokenManager implements TokenManager {
@@ -34,6 +34,54 @@ public class DefaultTokenManager implements TokenManager {
      */
     private static final String TOKEN_SECRET="4kd2js1kl4mmc5kd4sa4x54e8w/d18as-+asc2DDX2D8gf";
 
+    private static final String REFRESH_TOKEN_SECRET="SOFG,ZX9-S8Q2+X5R4+672FS9MPV;Z.PQ*/91`SA56CZ5@$^%&(@sgjxasfw";
+
+    /**
+     * 对token进行检查
+     * @return 响应
+     */
+    public Response checkAuthorization(String authorization, int val, String addr){
+        return checkAuthorizationImpl(authorization,val,addr,true);
+    }
+
+    private Response checkRefreshAuthorization(String authorization){
+        return checkAuthorizationImpl(authorization,0,null,false);
+    }
+
+    private Response checkAuthorizationImpl(String authorization, int val, String addr,boolean flag){
+
+        //token是否为空
+        if(authorization==null) return Response.failure(TokenErrorCode.DID_NOT_LOGIN);
+
+        //获取token解析结果
+        SimpleUser user;
+        if(flag){
+            user = analysisToken(authorization);
+        } else {
+           user = analysisRefreshToken(authorization);
+        }
+        if(user==null) return Response.failure(TokenErrorCode.WRONG_TOKEN);
+
+        //令牌需要刷新
+        if(user.getCount()==-1) return Response.failure(TokenErrorCode.NEED_REFRESH);
+
+        //需要重新登录
+        if(user.getCount()== DefaultTokenManager.MAX_COUNT) return Response.failure(TokenErrorCode.NEED_LOGIN);
+
+        if(flag){
+            //检查地址是否一致
+            if(!addr.equals(user.getAddr())) return Response.failure(TokenErrorCode.WRONG_ADDR);
+
+            //检查接口权限
+            if (user.getRole()<val)return Response.failure(TokenErrorCode.INSUFFICIENT_AUTHORITY);
+        }
+        if(flag){
+            return Response.success();
+        }else {
+            return Response.success(user);
+        }
+
+    }
 
     @Override
     public String generateAccessToken(SimpleUser user) {
@@ -60,9 +108,38 @@ public class DefaultTokenManager implements TokenManager {
     }
 
     @Override
-    public SimpleUser analysisToken(String token) {
+    public String generateRefreshToken(SimpleUser user) {
         try{
-            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            Date date = new Date(System.currentTimeMillis()+REFRESH_EXPIRE_TIME);
+            Algorithm algorithm = Algorithm.HMAC256(REFRESH_TOKEN_SECRET);
+            Map<String,Object> header = new HashMap<>();
+            header.put("typ","JWT");
+            header.put("alg","HS256");
+
+            return JWT.create()
+                    .withHeader(header)
+                    .withClaim("uid",user.getUserId())
+                    .withClaim("role",user.getRole())
+                    .withClaim("addr",user.getAddr())
+                    .withClaim("count",user.getCount())
+                    .withExpiresAt(date)
+                    .sign(algorithm);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private SimpleUser analysisTokenImpl(String token,boolean flag){
+        try{
+
+            Algorithm algorithm ;
+            if(flag){
+                algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            }else{
+                algorithm = Algorithm.HMAC256(REFRESH_TOKEN_SECRET);
+            }
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(token);
             return new SimpleUser(
@@ -79,5 +156,31 @@ public class DefaultTokenManager implements TokenManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public SimpleUser analysisToken(String token) {
+        return analysisTokenImpl(token,true);
+    }
+
+    private SimpleUser analysisRefreshToken(String token){
+        return analysisTokenImpl(token,false);
+    }
+
+    @Override
+    public List<String> refreshToken(String tk) {
+        //TODO
+        Response response = checkRefreshAuthorization(tk);
+        //如果解析失败，则返回null
+        if(!response.isSuccess())return null;
+        SimpleUser user = (SimpleUser) response.getData();
+        user.setCount(user.getCount()+1);
+        if(user.getCount()>5)return null;
+
+        List<String> list = new ArrayList<>();
+        list.add(generateAccessToken(user));
+        list.add(generateRefreshToken(user));
+
+        return list;
     }
 }

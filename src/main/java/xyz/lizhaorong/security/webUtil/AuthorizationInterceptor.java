@@ -39,8 +39,11 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         //检查是否需要身份验证
         int atVal = needAuthorization(handler);
 
+        //从header中得到token
+        String authorization = request.getHeader("Authorization");
+
         if (atVal >0) {
-            Response res = checkAuthorization(request,atVal);
+            Response res = tokenManager.checkAuthorization(authorization,atVal,getAddress(request));
             if(!res.isSuccess()) {
                 response.setStatus(401);
                 response.getWriter().write(mapper.writeValueAsString(res));
@@ -65,35 +68,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         return ano==null?0:ano.value();
     }
 
-    /**
-     * 对token进行检查
-     * @return 响应
-     */
-    private Response checkAuthorization(HttpServletRequest request,int val){
-        String message;
-        //从header中得到token
-        String authorization = request.getHeader("Authorization");
 
-        //
-        if(authorization==null) return Response.failure(TokenErrorCode.DID_NOT_LOGIN);
-
-        //获取token解析结果
-        SimpleUser user = tokenManager.analysisToken(authorization);
-        if(user==null) return Response.failure(TokenErrorCode.WRONG_TOKEN);
-
-        //令牌需要刷新
-        if(user.getCount()==-1) return Response.failure(TokenErrorCode.NEED_REFRESH);
-
-        //需要重新登录
-        if(user.getCount()== DefaultTokenManager.MAX_COUNT) return Response.failure(TokenErrorCode.NEED_LOGIN);
-
-        //检查地址是否一致
-        if(!getAddress(request).equals(user.getAddr())) return Response.failure(TokenErrorCode.WRONG_ADDR);
-
-        //检查接口权限
-        if (user.getRole()<val)return Response.failure(TokenErrorCode.INSUFFICIENT_AUTHORITY);
-
-        return Response.success();
-    }
 
 }

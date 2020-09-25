@@ -18,6 +18,12 @@ public class TokenTest {
     }
 
     @Test
+    public void t4(){
+        TokenManager manager = new DefaultTokenManager();
+        System.out.println(manager.generateRefreshToken(new SimpleUser("201721221294",4,"0:0:0:0:0:0:0:1",2)));
+    }
+
+    @Test
     public void t3() throws NoSuchMethodException {
         //Authorization annotation = HomeController.class.getMethod("getsb").getClass().getAnnotation(Authorization.class);
         Annotation[] annotations = HomeController.class.getMethod("getsb").getDeclaringClass().getAnnotations();
