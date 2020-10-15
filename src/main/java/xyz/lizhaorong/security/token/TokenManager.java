@@ -1,35 +1,15 @@
 package xyz.lizhaorong.security.token;
 
-
-import xyz.lizhaorong.web.util.Response;
-
-import java.util.List;
+import xyz.lizhaorong.security.token.entity.SimpleUser;
+import xyz.lizhaorong.security.token.entity.TokenObject;
+import xyz.lizhaorong.util.support.ErrorCode;
 
 public interface TokenManager {
 
-    /**
-     * 生成一个token
-     * @return accessToken字符串
-     */
-    String generateAccessToken(SimpleUser user);
+    TokenObject generate(SimpleUser user);
 
+    TokenObject refresh(String refreshToken);
 
-    /**
-     * 生成一个用于刷新的token
-     * @return refreshToken字符串
-     */
-    String generateRefreshToken(SimpleUser user);
-
-    /**
-     * 刷新token
-     * @return 刷新后的token组
-     */
-    List<String> refreshToken(String tk);
-
-    /**
-     * 检查token是否符合要求
-     * @return 结果
-     */
-    Response checkAuthorization(String authorization, int val, String addr);
+    ErrorCode checkAuthorization(String accessToken,int role,String addr);
 
 }
