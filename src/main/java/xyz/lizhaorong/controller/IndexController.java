@@ -26,13 +26,6 @@ public class IndexController {
         return "hello";
     }
 
-    @GetMapping("/sb")
-    @ResponseBody
-    public Response getSb(){
-        return Response.success(sbService.geUserById(1));
-    }
-
-
     @GetMapping
     @Authorization(1)
     public String index(){

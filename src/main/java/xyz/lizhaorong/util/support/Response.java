@@ -1,55 +1,57 @@
 package xyz.lizhaorong.util.support;
 
-public class Response {
+public class Response<T> {
 
     private static final String OK = "ok";
     private static final String ERROR = "error";
 
     private boolean success;
     private String message;
-    private Object data;
+    private T data;
 
-    public static Response success(){
-        Response response = new Response();
-        response.message=OK;
-        response.success=true;
-        return response;
+    private static final Response<Boolean> succInstance = new Response<Boolean>().success(true);
+
+    public static Response<Boolean> staticSuccess(){
+        return succInstance;
     }
 
-    public static Response success(Object data){
-        Response response = new Response();
-        response.message=OK;
-        response.success=true;
-        response.data = data;
-        return response;
+    public Response<T> success(){
+        message=OK;
+        success=true;
+        return this;
     }
 
-    public static Response failure(){
-        Response response = new Response();
-        response.message=ERROR;
-        response.success=false;
-        return response;
+    public Response<T> success(T data){
+        message=OK;
+        success=true;
+        this.data=data;
+        return this;
     }
 
-    public static Response failure(String message,Object data){
-        Response response = new Response();
-        response.message=message;
-        response.success=false;
-        response.data = data;
-        return response;
+    public Response<T> failure(){
+        message=ERROR;
+        success=false;
+        return this;
     }
 
-    public static Response failure(String message){
-        Response response = new Response();
-        response.message=message;
-        response.success=false;
-        return response;
+    public Response<T> failure(String message){
+        this.message=message;
+        success=false;
+        return this;
     }
 
-    public static Response failure(ErrorCode errorCode){
-        Response response = new Response();
+    public Response<T> failure(String message, T data){
+        this.message=message;
+        this.data=data;
+        success=false;
+        return this;
+    }
+
+
+    public static Response<Integer> failure(ErrorCode errorCode){
+        Response<Integer> response = new Response<>();
         response.message=errorCode.message();
-        response.data=errorCode.code();
+        response.data = errorCode.code();
         response.success=false;
         return response;
     }
@@ -62,7 +64,7 @@ public class Response {
         return message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 

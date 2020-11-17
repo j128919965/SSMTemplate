@@ -60,10 +60,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
                 response.sendRedirect(request.getContextPath()+"/login");
                 return false;
             }
-
-
         }
-
         return true;
     }
 

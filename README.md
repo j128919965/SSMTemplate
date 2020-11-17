@@ -42,3 +42,16 @@
 * 增加logFilter，可以方便快捷的debug
 * 将两个token字符串合为一个TokenObject对象。
 * 优化了整体项目结构，后续会尝试增加更多的扩展性，解耦
+
+## v 0.6.1
+
+2020.11.17
+重构http模块，拆分功能，采用装饰器模式
+演示代码在test中
+- 基础的HttpClient接口
+    - 基于apache的BaseHttpClient
+    - 可重发的ResendAbleHttpClient
+- 异步的AysncHttpClient接口
+    -  基于单独开线程的ThreadAsyncHttpClient
+    
+ 
